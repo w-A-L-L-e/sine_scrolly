@@ -13,3 +13,4 @@ make
 ./scroll "your scrolltext here!"
 
 ```
+![image](https://github.com/user-attachments/assets/ef897044-ee67-4a70-b09b-bfb23d26da05)

@@ -1,6 +1,6 @@
 # sine_scrolly
 
-Amiga style sine scroll demo written in a few hours using C++ and SDL2 (only tested on linux)
+Amiga 90s style sine scroll demo written in C++ using SDL2 (only tested on linux).
 
 Some links and packages used
 
@@ -13,3 +13,8 @@ make
 ./scroll "your scrolltext here!"
 
 ```
+
+Pressing f : toggles fullscreen.
+Pressing q : exits demo
+
+Screen here

@@ -12,6 +12,7 @@ description   : Show full screen filled with random pixels and circle drawn
 
 #include "screen.h"
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_timer.h>
 #include <cstring>
 #include <iostream>
@@ -277,24 +278,42 @@ bool drawString(Screen &scr, SDL_Texture *font, const std::string &str,
   return false; // we havent scrolled to end yet
 }
 
+void startDrawing(Screen &scr, double deltaTime) {
+  int mouseX, mouseY;
+  SDL_GetMouseState(&mouseX, &mouseY);
+  mouseX = (int)((float)mouseX / 1440 * 640);
+  mouseY = (int)((float)mouseY / 900 * 400);
+
+  scr.setColor(0, 50, 200);
+  scr.circle(mouseX, mouseY, 2);
+  scr.draw(false);
+}
+
+bool end_reached = false;
 void drawFrame(Screen &scr, SDL_Texture *font, double deltaTime) {
+  if (end_reached) {
+    // text has been scrolled all the way we reset offset to 0 to show it again
+    offset = 0;
+
+    // We can also do something else after the scrolly like so:
+    // example of drawing with mouse on screen for Noahtje ;)
+    //
+    // startDrawing(scr, deltaTime);
+    // SDL_RenderPresent(renderer);
+    // return;
+  }
+
+  scr.clear();
   offset += SPEED * deltaTime;
 
   sine_offset -= SINE_SPEED * deltaTime;
   if (sine_offset < 0)
     sine_offset = 640;
 
-  scr.clear();
-
-  bool end_reached = drawString(scr, font, scroll_text, 640 - offset, YPOS);
-  if (end_reached)
-    offset = 0;
-
-  // draw on screen examples
-  // scr.setColor(255, 255, 255);
-  // scr.box(0 + offset / 10, 0 + offset / 10, 48, 48);
-  // scr.pixel(x, y, 20, 40, 20);
-  // scr.draw(false); // dont present yet
+  end_reached = drawString(scr, font, scroll_text, 640 - offset, YPOS);
+  for (int i = 0; i < 640; i++)
+    for (int j = 0; j < 400; j++)
+      scr.pixel(i, j, 255, 255, 255);
 
   // swap double buffer using renderpresent
   SDL_RenderPresent(renderer);
